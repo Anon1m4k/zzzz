@@ -60,6 +60,10 @@
       <Project>{7aefcea7-0298-44d8-90e3-e335bbbd576b}</Project>
       <Name>MyLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WindowsFormsZZ\WindowsFormsZZ.csproj">
+      <Project>{F5C08E29-7CC6-42B4-94D9-C7A21D2490F4}</Project>
+      <Name>WindowsFormsZZ</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

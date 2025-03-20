@@ -11,5 +11,14 @@ namespace MyLib
         public string Name { get; set; }
         public string Author { get; set; }
         public int YearOfPublication { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Book other)
+            {
+                return Name == other.Name && Author == other.Author&&YearOfPublication == other.YearOfPublication;
+            }
+            return false;           
+        }
     }
 } 

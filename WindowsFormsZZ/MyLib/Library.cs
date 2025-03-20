@@ -9,8 +9,6 @@ namespace MyLib
 {
     public class Library
     {
-        public BindingList<Book> Books { get; private set; } = new BindingList<Book>();
-
-        //List<Book> Sort = new List<Book>();  
+        public BindingList<Book> Books { get; private set; } = new BindingList<Book>();  
     }
 }
