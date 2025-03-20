@@ -12,6 +12,4 @@ namespace MyLib
         public string Author { get; set; }
         public int YearOfPublication { get; set; }
     }
-
-   
 } 
