@@ -9,7 +9,7 @@ using MyLib;
 namespace MyLib
 {
     public class Library
-    {       
+    {        
         public BindingList<Book> Books = new BindingList<Book>()
         {
             new Book { Name = "Мастер и маргарита", Author = "Михаил Булгаков", YearOfPublication = 1800 },
