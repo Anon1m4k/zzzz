@@ -77,7 +77,6 @@ namespace WindowsFormsZZ
                 MessageBox.Show("Книга не найдена или не была выдана");
             }
         }
-
         private void button4_Click(object sender, EventArgs e)
         {
             string selectedAuthor = "";
