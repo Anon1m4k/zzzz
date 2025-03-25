@@ -16,13 +16,11 @@ namespace MyLib
             new Book { Name = "Война и мир", Author = "Лев Толстой", YearOfPublication = 1900, IsIssued = false },
             new Book { Name = "Преступление и наказание", Author = "Фёдор Достоевский", YearOfPublication = 2000, IsIssued = false }
         };
-
         public BindingList<Book> Sort(string selectedAuthor)
         {
             var sortedBooks = Books.Where(book => book.Author.Contains(selectedAuthor)).ToList();
             return new BindingList<Book>(sortedBooks);
         }
-
         // Метод для выдачи книги
         public bool IssueBook(string bookName, string readerName)
         {
@@ -35,7 +33,6 @@ namespace MyLib
             }
             return false;
         }
-
         // Метод для возврата книги
         public bool ReturnBook(string bookName)
         {

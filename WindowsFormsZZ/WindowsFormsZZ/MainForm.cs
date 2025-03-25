@@ -15,39 +15,32 @@ namespace WindowsFormsZZ
     {
         private Library library = new Library();
        
-            private Book selectedBook;
-
-            public MainForm()
-            {
-                InitializeComponent();
-                dataGridView1.DataSource = library.Books;
-                dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            }
-
-            private void button1_Click_1(object sender, EventArgs e)
-            {
-                string selectedAuthor = textBox1.Text;
-                var sortedBooks = library.Sort(selectedAuthor);
-                dataGridView1.DataSource = sortedBooks;
-            }
-
-            private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-            {
-                if (dataGridView1.SelectedRows.Count > 0)
-                {
-                    selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
-                }
-            }
-
+        public Book selectedBook;
+ 
+        public MainForm()
+        {
+            InitializeComponent();
+            dataGridView1.DataSource = library.Books;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        }
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            string selectedAuthor = textBox1.Text;
+            var sortedBooks = library.Sort(selectedAuthor);
+            dataGridView1.DataSource = sortedBooks;
+        }       
         private void button2_Click(object sender, EventArgs e)
         {
-            /*if (selectedBook == null)
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+            }
+
+            if (selectedBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
-            }*/
-            string bookName = dataGridView1.SelectedRows[0].Cells["Name"].Value.ToString();
-
+            }        
             string readerName = textBox2.Text; // Get text from the TextBox
 
             if (string.IsNullOrEmpty(readerName))
@@ -69,20 +62,27 @@ namespace WindowsFormsZZ
         }
         private void button3_Click(object sender, EventArgs e)
         {
-                if (selectedBook == null)
-                {
-                    MessageBox.Show("Пожалуйста, выберите книгу из списка");
-                    return;
-                }
-                if (library.ReturnBook(selectedBook.Name))
-                {
-                    MessageBox.Show($"Книга '{selectedBook.Name}' возвращена в библиотеку");
-                    dataGridView1.Refresh();
-                }
-                else
-                {
-                    MessageBox.Show("Книга не найдена или не была выдана");
-                }
-        }     
+            if (selectedBook == null)
+            {
+                MessageBox.Show("Пожалуйста, выберите книгу из списка");
+                return;
+            }
+            if (library.ReturnBook(selectedBook.Name))
+            {
+                MessageBox.Show($"Книга '{selectedBook.Name}' возвращена в библиотеку");
+                dataGridView1.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("Книга не найдена или не была выдана");
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string selectedAuthor = "";
+            var sortedBooks = library.Sort(selectedAuthor);
+            dataGridView1.DataSource = sortedBooks;
+        }
     }
 }
