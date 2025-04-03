@@ -22,6 +22,7 @@ namespace WindowsFormsZZ
             InitializeComponent();
             dataGridView1.DataSource = library.Books;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView2.DataSource = library.IssuedBooks;
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -62,6 +63,7 @@ namespace WindowsFormsZZ
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
             if (selectedBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
