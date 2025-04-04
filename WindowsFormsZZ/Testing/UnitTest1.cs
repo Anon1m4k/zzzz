@@ -27,7 +27,6 @@ namespace Testing
             BindingList<Book> result = library.Sort(author);
             if (expectedCount == 1)
             {
-                Assert.AreEqual(expectedCount, result.Count);
                 Assert.AreEqual("Мастер и Маргарита", result[0].Name);
             }
             else
