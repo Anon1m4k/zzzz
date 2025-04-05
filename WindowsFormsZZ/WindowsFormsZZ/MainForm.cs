@@ -14,15 +14,15 @@ namespace WindowsFormsZZ
     public partial class MainForm : Form
     {
         private Library library = new Library();
-       
         public Book selectedBook;
- 
+        public DicBook dic = new DicBook();
+
         public MainForm()
         {
             InitializeComponent();
             dataGridView1.DataSource = library.Books;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView2.DataSource = library.IssuedBooks;
+            // dataGridView2.DataSource = 
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -84,6 +84,29 @@ namespace WindowsFormsZZ
             string selectedAuthor = "";
             var sortedBooks = library.Sort(selectedAuthor);
             dataGridView1.DataSource = sortedBooks;
+        } 
+        
+        public void HandleDataGridView1SelectionChanged()
+        {
+           
+                // Получаем выбранный элемент
+                var selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+                List<WriteBook> L = dic.GetBooksByKey(selectedBook.Name);
+
+                // Создаём новый список
+               /* List<Book> newList = new List<Book>();
+
+                // Добавляем элемент в список в количестве Quality
+                for (int i = 0; i < selectedBook.Quality; i++)
+                {
+                    newList.Add(selectedBook);
+                }*/
+
+                // Можно теперь делать что-то с новым списком, например, выводить его в другой DataGridView
+                // Привяжем новый список к DataGridView2
+                dataGridView2.DataSource = L;
+                dataGridView2.Refresh();
+            
         }
-    }
+    }   
 }
