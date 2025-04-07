@@ -8,6 +8,7 @@ namespace MyLib
 {
     public class WriteBook
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateTake { get; set; }
         public bool IsIssued { get; set; } = false; // Добавлено свойство для отслеживания статуса книги

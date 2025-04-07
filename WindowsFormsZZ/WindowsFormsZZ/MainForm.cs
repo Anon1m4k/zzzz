@@ -15,14 +15,14 @@ namespace WindowsFormsZZ
     {
         private Library library = new Library();
         public Book selectedBook;
-        public DicBook dic = new DicBook();
-
+        public WriteBook selectedWriteBook;
+        public DicBook dic = new DicBook();   
         public MainForm()
         {
             InitializeComponent();
             dataGridView1.DataSource = library.Books;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            // dataGridView2.DataSource = 
+            dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -32,29 +32,26 @@ namespace WindowsFormsZZ
         }       
         private void button2_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (dataGridView2.SelectedRows.Count > 0)
             {
-                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
             }
-
-            if (selectedBook == null)
+            if (selectedWriteBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }        
-            string readerName = textBox2.Text; // Get text from the TextBox
-
+            string readerName = textBox2.Text;
             if (string.IsNullOrEmpty(readerName))
             {
                 MessageBox.Show("Пожалуйста, введите имя читателя.");
-                return; // Exit if no name is entered
+                return;
             }
-
-            if (library.IssueBook(selectedBook.Name, readerName))
+            if (dic.IssueBook(selectedWriteBook, readerName))
             {
-                MessageBox.Show($"Книга '{selectedBook.Name}' выдана читателю {readerName}");
-                textBox2.Clear(); // Clear the TextBox after successful issue
-                dataGridView1.Refresh();
+                MessageBox.Show($"Книга '{selectedWriteBook.Name}' выдана читателю {readerName}");
+                textBox2.Clear();
+                dataGridView2.Refresh();
             }
             else
             {
@@ -63,16 +60,19 @@ namespace WindowsFormsZZ
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
-            if (selectedBook == null)
+            if (dataGridView2.SelectedRows.Count > 0)
+            {
+                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
+            }
+            if (selectedWriteBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }
-            if (library.ReturnBook(selectedBook.Name))
+            if (dic.ReturnBook(selectedWriteBook))
             {
-                MessageBox.Show($"Книга '{selectedBook.Name}' возвращена в библиотеку");
-                dataGridView1.Refresh();
+                MessageBox.Show($"Книга '{selectedWriteBook.Name}' возвращена в библиотеку");
+                dataGridView2.Refresh();
             }
             else
             {
@@ -84,29 +84,103 @@ namespace WindowsFormsZZ
             string selectedAuthor = "";
             var sortedBooks = library.Sort(selectedAuthor);
             dataGridView1.DataSource = sortedBooks;
-        } 
-        
-        public void HandleDataGridView1SelectionChanged()
+        }          
+       /* private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-           
-                // Получаем выбранный элемент
-                var selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
-                List<WriteBook> L = dic.GetBooksByKey(selectedBook.Name);
+            if (dataGridView1.SelectedRows.Count > 0)
+            { 
+                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem; //Получаем выделенную строку
 
-                // Создаём новый список
-               /* List<Book> newList = new List<Book>();
-
-                // Добавляем элемент в список в количестве Quality
-                for (int i = 0; i < selectedBook.Quality; i++)
+                if (selectedBook != null)
                 {
-                    newList.Add(selectedBook);
-                }*/
+                    dic.DicBooks.Clear(); //Очистка предыдущего содержания словаря
+                    library.FillDictionary(dic.DicBooks); //Заполнение словаря на основе выделенной строки
+                    BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Name);
+                    dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
+                    dataGridView2.Refresh();
+                }
+                else
+                {  
+                    MessageBox.Show("Выберите строку!");
+                }
+            }
+        }*/
 
-                // Можно теперь делать что-то с новым списком, например, выводить его в другой DataGridView
-                // Привяжем новый список к DataGridView2
-                dataGridView2.DataSource = L;
-                dataGridView2.Refresh();
-            
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+
+                if (selectedBook != null)
+                {
+                    dic.DicBooks.Clear(); // Очистка предыдущего содержания словаря
+                    library.FillDictionary(dic.DicBooks); // Заполнение словаря на основе выделенной строки
+
+                    // Восстановление статуса книг из словаря bookStatus
+                    foreach (var key in dic.DicBooks.Keys)
+                    {
+                        if (dic.bookStatus.ContainsKey(key))
+                        {
+                            var status = dic.bookStatus[key];
+                            foreach (var book in dic.DicBooks[key])
+                            {
+                                if (book.Name == status.Name)
+                                {
+                                    book.IsIssued = status.IsIssued;
+                                    book.DateTake = status.DateTake;
+                                    book.DateReturn = status.DateReturn;
+                                    book.IssuedTo = status.IssuedTo;
+                                }
+                            }
+                        }
+                    }
+
+                    BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Name);
+                    dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
+                    dataGridView2.Refresh();
+                }
+                else
+                {
+                    MessageBox.Show("Выберите строку!");
+                }
+            }
         }
     }   
 }
+
+/*private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count > 0)
+            {
+                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+
+                dic.DicBooks.Clear();
+
+                // Заполнение словаря на основе выделенной строки
+                library.FillDictionary(dic.DicBooks);
+
+                // Вывод словаря в dataGridView2
+                //dataGridView2.DataSource = dic.DicBooks.Values.SelectMany(x => x).ToList();
+               // dataGridView2.Refresh();
+
+                BindingList<WriteBook> L = dic.GetBooksByKey(selectedBook.Name);
+                dataGridView2.DataSource = L;
+                dataGridView2.Refresh();
+
+
+                    // Заполнение словаря только выделенной книгой
+                    if (!dic.DicBooks.ContainsKey(selectedBook.Name))
+                    {
+                        dic.DicBooks.Add(selectedBook.Name, new BindingList<WriteBook>());
+                    }
+                    // Добавляем нужное количество экземпляров книги в словарь
+                    for (int i = 0; i < selectedBook.Quality; i++)
+                    {
+                        dic.DicBooks[selectedBook.Name].Add(new WriteBook { Name = selectedBook.Name });
+                    }
+                    // Вывод словаря в dataGridView2
+                    dataGridView2.DataSource = dic.DicBooks.Values.SelectMany(x => x).ToList();
+                    dataGridView2.Refresh();
+            }
+        }*/

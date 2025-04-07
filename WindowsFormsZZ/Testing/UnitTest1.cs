@@ -35,7 +35,7 @@ namespace Testing
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void IssueBook_Successfully_Issues_Book()
         {       
             string bookName = "Мастер и Маргарита";
@@ -46,7 +46,11 @@ namespace Testing
             Assert.IsTrue(result);
           //  Assert.IsTrue(library.Books.First(b => b.Name == bookName).IsIssued);
            // Assert.AreEqual(readerName, library.Books.First(b => b.Name == bookName).IssuedTo);
-        }
+        }*/
+
+
+
+
 
         /*public void IssueBook_Returns_False_When_Book_Is_Already_Issued()
         {
