@@ -27,7 +27,7 @@ namespace WindowsFormsZZ
         private void button1_Click_1(object sender, EventArgs e)
         {
             string selectedAuthor = textBox1.Text;
-            var sortedBooks = library.Sort(selectedAuthor);
+            var sortedBooks = library.Search(selectedAuthor);
             dataGridView1.DataSource = sortedBooks;
         }       
         private void button2_Click(object sender, EventArgs e)
@@ -82,7 +82,7 @@ namespace WindowsFormsZZ
         private void button4_Click(object sender, EventArgs e)
         {
             string selectedAuthor = "";
-            var sortedBooks = library.Sort(selectedAuthor);
+            var sortedBooks = library.Search(selectedAuthor);
             dataGridView1.DataSource = sortedBooks;
         }          
        /* private void dataGridView1_SelectionChanged(object sender, EventArgs e)

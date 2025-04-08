@@ -21,13 +21,20 @@ namespace Testing
 
         [TestMethod]
         [DataRow("Михаил Булгаков", 1)]
+        [DataRow("Михаил Булгаков", 2)]
         [DataRow("Некто", 0)]
         public void Sort_Returns_Correct_Result(string author, int expectedCount)
         {
-            BindingList<Book> result = library.Sort(author);
+            BindingList<Book> result = library.Search(author);
             if (expectedCount == 1)
             {
                 Assert.AreEqual("Мастер и Маргарита", result[0].Name);
+            }
+            else if (expectedCount == 2)
+            {
+                List<string> expectedNames = new List<string> { "Мастер и Маргарита", "Морфий" };
+                List<string> actualNames = result.Select(b => b.Name).ToList();
+                CollectionAssert.AreEquivalent(expectedNames, actualNames);
             }
             else
             {
