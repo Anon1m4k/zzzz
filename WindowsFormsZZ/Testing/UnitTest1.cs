@@ -1,115 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyLib;
 using WindowsFormsZZ;
 
 namespace Testing
-{   
+{
     [TestClass]
-    public class LibraryTests
+    public class UnitTest1
     {
-        private Library library;
+        BindingList<Book> expected = new BindingList<Book>(); //правильный
 
-        [TestInitialize]
-        public void Setup()
-        {
-            library = new Library();
-        }
+        private Library library = new Library();
 
         [TestMethod]
-        [DataRow("Михаил Булгаков", 1)]
-        [DataRow("Михаил Булгаков", 2)]
-        [DataRow("Некто", 0)]
-        public void Sort_Returns_Correct_Result(string author, int expectedCount)
+        public void TestMethodSort()
         {
-            BindingList<Book> result = library.Search(author);
-            if (expectedCount == 1)
-            {
-                Assert.AreEqual("Мастер и Маргарита", result[0].Name);
-            }
-            else if (expectedCount == 2)
-            {
-                List<string> expectedNames = new List<string> { "Мастер и Маргарита", "Морфий" };
-                List<string> actualNames = result.Select(b => b.Name).ToList();
-                CollectionAssert.AreEquivalent(expectedNames, actualNames);
-            }
-            else
-            {
-                Assert.AreEqual(expectedCount, result.Count);
-            }
+            library.Books.Add(new Book { Имя = "Мастер и маргарита", Автор = "Михаил Булгаков", Год_публикации = 1800 });
+            //library.Books.Add(new Book { Name = "Война и мир", Author = "Лев Толстой", YearOfPublication = 1900 });
+            //library.Books.Add(new Book { Name = "Преступление и наказание", Author = "Фёдор Достоевский", YearOfPublication = 2000 });
+
+            expected.Add(new Book { Имя = "Мастер и маргарита", Автор = "Михаил Булгаков", Год_публикации = 1800 });
+            //expected.Add(new Book { Name = "Война и мир", Author = "Лев Толстой", YearOfPublication = 1900 });
+            //expected.Add(new Book { Name = "Преступление и наказание", Author = "Фёдор Достоевский", YearOfPublication = 2000 });
+
+            BindingList<Book> actual = library.Books; //наш
+            CollectionAssert.AreEqual(expected, actual);
+            //CollectionAssert.AreEquivalent(expected,actual);
         }
-
-        /*[TestMethod]
-        public void IssueBook_Successfully_Issues_Book()
-        {       
-            string bookName = "Мастер и Маргарита";
-            string readerName = "Иван";
-       
-            bool result = library.IssueBook(bookName, readerName);
-
-            Assert.IsTrue(result);
-          //  Assert.IsTrue(library.Books.First(b => b.Name == bookName).IsIssued);
-           // Assert.AreEqual(readerName, library.Books.First(b => b.Name == bookName).IssuedTo);
-        }*/
-
-
-
-
-
-        /*public void IssueBook_Returns_False_When_Book_Is_Already_Issued()
-        {
-            // Arrange
-            string bookName = "Мастер и маргарита";
-            string readerName = "Иван";
-
-            // Issue the book first
-            library.IssueBook(bookName, readerName);
-
-            // Act
-            bool result = library.IssueBook(bookName, "Петр");
-
-            // Assert
-            Assert.IsFalse(result);
-        }*/
-
-        /*public void IssueBook_Returns_False_When_Book_Quality_Is_Zero()
-        {
-            // Arrange
-            string bookName = "Мастер и маргарита";
-            string readerName = "Иван";
-
-            // Issue the book multiple times to reduce quality to 0
-            library.IssueBook(bookName, readerName);
-            library.ReturnBook(bookName);
-            library.IssueBook(bookName, readerName); // Reduce quality to 9
-            for (int i = 0; i < 9; i++)
-            {
-                library.IssueBook(bookName, readerName); // Reducing quality to 0
-            }
-
-            // Act
-            bool result = library.IssueBook(bookName, "Петр");
-
-            // Assert
-            Assert.IsFalse(result);
-        }*/
-
-        /*public void ReturnBook_Successfully_Returns_Book()
-        {
-            // Arrange
-            string bookName = "Мастер и маргарита";
-            library.IssueBook(bookName, "Иван");
-
-            // Act
-            bool result = library.ReturnBook(bookName);
-
-            // Assert
-            Assert.IsTrue(result);
-            Assert.IsFalse(library.Books.First(b => b.Name == bookName).IsIssued);
-            Assert.IsNull(library.Books.First(b => b.Name == bookName).IssuedTo);
-        }*/
     }
 }

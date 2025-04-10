@@ -8,15 +8,16 @@ namespace MyLib
 {
     public class Book
     {  
-        public string Name { get; set; }
-        public string Author { get; set; }
-        public int YearOfPublication { get; set; }
-        public int Quality { get; set; }
+        public string Имя { get; set; }
+        public string Автор { get; set; }
+        public int Год_публикации { get; set; }
+        public int Колличество { get; set; }
+        public int Колличество_книг { get; set; }
         public override bool Equals(object obj)
         {
             if (obj is Book other)
             {
-                return Name == other.Name && Author == other.Author && YearOfPublication == other.YearOfPublication;
+                return Имя == other.Имя && Автор == other.Автор && Год_публикации == other.Год_публикации;
             }
             return false;
         }
