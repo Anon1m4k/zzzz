@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLib
+namespace WindowsFormsZZZ
 {
     public class Book
-    {  
+    {
         public string Имя { get; set; }
         public string Автор { get; set; }
         public int Год_публикации { get; set; }
-        public int Всего_книг { get; set; }
-        public int Количество_доступных { get; set; }
+        public int Количество_доступных_книг { get; set; }
+
         public override bool Equals(object obj)
         {
             if (obj is Book other)
@@ -22,4 +22,4 @@ namespace MyLib
             return false;
         }
     }
-} 
+}

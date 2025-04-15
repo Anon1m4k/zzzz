@@ -20,38 +20,71 @@ namespace WindowsFormsZZ
         public MainForm()
         {
             InitializeComponent();
-            dataGridView1.DataSource = library.Books;
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewBooks.DataSource = library.Books;
+            DataGridViewBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewTakeBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+           // dataGridView1.Columns["Всего_книг"].Visible = false;
+            //dataGridView1.Columns["Количество_доступных"].HeaderText = "Доступно";
+            //   dataGridView1.Columns["Колличество"].Visible = false;
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-            string selectedAuthor = textBox1.Text;
+            string selectedAuthor = SortTextbox.Text;
             var sortedBooks = library.Search(selectedAuthor);
-            dataGridView1.DataSource = sortedBooks;
+            DataGridViewBooks.DataSource = sortedBooks;
         }       
         private void button2_Click(object sender, EventArgs e)
         {
-            if (dataGridView2.SelectedRows.Count > 0)
+            if (DataGridViewTakeBooks.SelectedRows.Count > 0)
             {
-                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
+                selectedWriteBook = (WriteBook)DataGridViewTakeBooks.SelectedRows[0].DataBoundItem;
+                selectedBook = (Book)DataGridViewBooks.SelectedRows[0].DataBoundItem;
             }
             if (selectedWriteBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }        
-            string readerName = textBox2.Text;
+            string readerName = FullNameTextBox.Text;
             if (string.IsNullOrEmpty(readerName))
             {
                 MessageBox.Show("Пожалуйста, введите имя читателя.");
                 return;
             }
-            if (dic.IssueBook(selectedWriteBook, readerName))
+
+
+
+
+           /* int currentQuantity = selectedBook.Количество_книг;
+            if (currentQuantity > 0)
             {
-                MessageBox.Show($"Книга '{selectedWriteBook.Name}' выдана читателю {readerName}");
+                selectedBook.Количество_книг--;
+                dataGridView1.Refresh();
+            }*/
+
+
+           /* int currentQuantity = selectedBook.Количество_доступных;
+            if (currentQuantity > 0)
+            {
+                selectedBook.Количество_доступных--;
+                dataGridView1.Refresh();
+            }*/
+
+
+
+           /* if (dic.IssueBook(selectedWriteBook, readerName))
+            {   
+               
+                MessageBox.Show($"Книга '{selectedWriteBook.Имя}' выдана читателю {readerName}");
                 textBox2.Clear();
                 dataGridView2.Refresh();
+            }*/
+            if (dic.IssueBook(selectedWriteBook, readerName))
+            {
+                selectedBook.Количество_доступных--; // Уменьшаем доступные
+                DataGridViewBooks.Refresh();
+                DataGridViewTakeBooks.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -60,19 +93,44 @@ namespace WindowsFormsZZ
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            if (dataGridView2.SelectedRows.Count > 0)
+            if (DataGridViewTakeBooks.SelectedRows.Count > 0)
             {
-                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
+                selectedWriteBook = (WriteBook)DataGridViewTakeBooks.SelectedRows[0].DataBoundItem;
             }
             if (selectedWriteBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }
+
+
+
+
+            /* int currentQuantity = selectedBook.Количество_книг;
+             if (currentQuantity > 0)
+             {
+                 selectedBook.Количество_книг++;
+                 dataGridView1.Refresh();
+             }*/
+
+            /* int currentQuantity = selectedBook.Количество_доступных;
+             if (currentQuantity > 0)
+             {
+                 selectedBook.Количество_доступных++;
+                 dataGridView1.Refresh();
+             }*/
+
+
+            /*if (dic.ReturnBook(selectedWriteBook))
+            {
+                MessageBox.Show($"Книга '{selectedWriteBook.Имя}' возвращена в библиотеку");
+                dataGridView2.Refresh();
+            }*/
             if (dic.ReturnBook(selectedWriteBook))
             {
-                MessageBox.Show($"Книга '{selectedWriteBook.Name}' возвращена в библиотеку");
-                dataGridView2.Refresh();
+                selectedBook.Количество_доступных++; // Увеличиваем доступные
+                DataGridViewBooks.Refresh();
+                DataGridViewTakeBooks.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -83,34 +141,14 @@ namespace WindowsFormsZZ
         {
             string selectedAuthor = "";
             var sortedBooks = library.Search(selectedAuthor);
-            dataGridView1.DataSource = sortedBooks;
+            DataGridViewBooks.DataSource = sortedBooks;
+            SortTextbox.Clear();
         }          
-       /* private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count > 0)
-            { 
-                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem; //Получаем выделенную строку
-
-                if (selectedBook != null)
-                {
-                    dic.DicBooks.Clear(); //Очистка предыдущего содержания словаря
-                    library.FillDictionary(dic.DicBooks); //Заполнение словаря на основе выделенной строки
-                    BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Name);
-                    dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
-                    dataGridView2.Refresh();
-                }
-                else
-                {  
-                    MessageBox.Show("Выберите строку!");
-                }
-            }
-        }*/
-
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (DataGridViewBooks.SelectedRows.Count > 0)
             {
-                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+                selectedBook = (Book)DataGridViewBooks.SelectedRows[0].DataBoundItem;
 
                 if (selectedBook != null)
                 {
@@ -120,25 +158,24 @@ namespace WindowsFormsZZ
                     // Восстановление статуса книг из словаря bookStatus
                     foreach (var key in dic.DicBooks.Keys)
                     {
-                        if (dic.bookStatus.ContainsKey(key))
+                        if (dic._bookStatus.ContainsKey(key))
                         {
-                            var status = dic.bookStatus[key];
+                            var status = dic._bookStatus[key];
                             foreach (var book in dic.DicBooks[key])
                             {
-                                if (book.Name == status.Name)
+                                if (book.Имя == status.Имя)
                                 {
-                                    book.IsIssued = status.IsIssued;
-                                    book.DateTake = status.DateTake;
-                                    book.DateReturn = status.DateReturn;
-                                    book.IssuedTo = status.IssuedTo;
+                                    book.Факт_взятия = status.Факт_взятия;
+                                    book.Дата_взятия = status.Дата_взятия;
+                                    book.Дата_возврата = status.Дата_возврата;
+                                    book.Читатель = status.Читатель;
                                 }
                             }
                         }
                     }
-
-                    BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Name);
-                    dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
-                    dataGridView2.Refresh();
+                    BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Имя);
+                    DataGridViewTakeBooks.DataSource = L; // Вывод словаря в dataGridView2
+                    DataGridViewTakeBooks.Refresh();
                 }
                 else
                 {
@@ -184,3 +221,24 @@ namespace WindowsFormsZZ
                     dataGridView2.Refresh();
             }
         }*/
+
+/* private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+       {
+           if (dataGridView1.SelectedRows.Count > 0)
+           { 
+               selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem; //Получаем выделенную строку
+
+               if (selectedBook != null)
+               {
+                   dic.DicBooks.Clear(); //Очистка предыдущего содержания словаря
+                   library.FillDictionary(dic.DicBooks); //Заполнение словаря на основе выделенной строки
+                   BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Name);
+                   dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
+                   dataGridView2.Refresh();
+               }
+               else
+               {  
+                   MessageBox.Show("Выберите строку!");
+               }
+           }
+       }*/
