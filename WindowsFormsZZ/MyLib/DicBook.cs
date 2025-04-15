@@ -36,6 +36,26 @@ namespace MyLib
             }
             return new BindingList<WriteBook>();
         }
+        /*public BindingList<WriteBook> GetWriteBookByKey(string NameBook)
+        {
+            if (DicBooks.TryGetValue(NameBook, out BindingList<WriteBook> result))
+            {
+                // Восстанавливаем статусы из _bookStatus
+                foreach (var book in result)
+                {
+                    string key = $"{book.Имя}_{book.Id}";
+                    if (_bookStatus.TryGetValue(key, out WriteBook status))
+                    {
+                        book.Факт_взятия = status.Факт_взятия;
+                        book.Читатель = status.Читатель;
+                        book.Дата_взятия = status.Дата_взятия;
+                        book.Дата_возврата = status.Дата_возврата;
+                    }
+                }
+                return result;
+            }
+            return new BindingList<WriteBook>();
+        }*/
         public bool IssueBook(WriteBook selectedBook, string readerName)
         {
             if (selectedBook != null && !selectedBook.Факт_взятия)

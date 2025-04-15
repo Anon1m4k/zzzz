@@ -11,8 +11,8 @@ namespace MyLib
         public string Имя { get; set; }
         public string Автор { get; set; }
         public int Год_публикации { get; set; }
-        public int Колличество { get; set; }
-        public int Колличество_книг { get; set; }
+        public int Всего_книг { get; set; }
+        public int Количество_доступных { get; set; }
         public override bool Equals(object obj)
         {
             if (obj is Book other)

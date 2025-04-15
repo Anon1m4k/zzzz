@@ -23,7 +23,10 @@ namespace WindowsFormsZZ
             dataGridView1.DataSource = library.Books;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Columns["Колличество"].Visible = false;
+
+           // dataGridView1.Columns["Всего_книг"].Visible = false;
+            //dataGridView1.Columns["Количество_доступных"].HeaderText = "Доступно";
+            //   dataGridView1.Columns["Колличество"].Visible = false;
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -49,18 +52,39 @@ namespace WindowsFormsZZ
                 MessageBox.Show("Пожалуйста, введите имя читателя.");
                 return;
             }
-            int currentQuantity = selectedBook.Колличество_книг;
+
+
+
+
+           /* int currentQuantity = selectedBook.Количество_книг;
             if (currentQuantity > 0)
             {
-                selectedBook.Колличество_книг--;
+                selectedBook.Количество_книг--;
                 dataGridView1.Refresh();
-            }
-            if (dic.IssueBook(selectedWriteBook, readerName))
+            }*/
+
+
+           /* int currentQuantity = selectedBook.Количество_доступных;
+            if (currentQuantity > 0)
+            {
+                selectedBook.Количество_доступных--;
+                dataGridView1.Refresh();
+            }*/
+
+
+
+           /* if (dic.IssueBook(selectedWriteBook, readerName))
             {   
                
                 MessageBox.Show($"Книга '{selectedWriteBook.Имя}' выдана читателю {readerName}");
                 textBox2.Clear();
                 dataGridView2.Refresh();
+            }*/
+            if (dic.IssueBook(selectedWriteBook, readerName))
+            {
+                selectedBook.Количество_доступных--; // Уменьшаем доступные
+                dataGridView1.Refresh();
+                dataGridView2.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -78,16 +102,35 @@ namespace WindowsFormsZZ
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }
-            int currentQuantity = selectedBook.Колличество_книг;
-            if (currentQuantity > 0)
-            {
-                selectedBook.Колличество_книг++;
-                dataGridView1.Refresh();
-            }
-            if (dic.ReturnBook(selectedWriteBook))
+
+
+
+
+            /* int currentQuantity = selectedBook.Количество_книг;
+             if (currentQuantity > 0)
+             {
+                 selectedBook.Количество_книг++;
+                 dataGridView1.Refresh();
+             }*/
+
+            /* int currentQuantity = selectedBook.Количество_доступных;
+             if (currentQuantity > 0)
+             {
+                 selectedBook.Количество_доступных++;
+                 dataGridView1.Refresh();
+             }*/
+
+
+            /*if (dic.ReturnBook(selectedWriteBook))
             {
                 MessageBox.Show($"Книга '{selectedWriteBook.Имя}' возвращена в библиотеку");
                 dataGridView2.Refresh();
+            }*/
+            if (dic.ReturnBook(selectedWriteBook))
+            {
+                selectedBook.Количество_доступных++; // Увеличиваем доступные
+                dataGridView1.Refresh();
+                dataGridView2.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -99,6 +142,7 @@ namespace WindowsFormsZZ
             string selectedAuthor = "";
             var sortedBooks = library.Search(selectedAuthor);
             dataGridView1.DataSource = sortedBooks;
+            textBox1.Clear();
         }          
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
