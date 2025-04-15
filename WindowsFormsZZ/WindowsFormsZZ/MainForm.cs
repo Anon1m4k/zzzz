@@ -20,9 +20,9 @@ namespace WindowsFormsZZ
         public MainForm()
         {
             InitializeComponent();
-            dataGridView1.DataSource = library.Books;
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewBooks.DataSource = library.Books;
+            DataGridViewBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            DataGridViewTakeBooks.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
            // dataGridView1.Columns["Всего_книг"].Visible = false;
             //dataGridView1.Columns["Количество_доступных"].HeaderText = "Доступно";
@@ -30,23 +30,23 @@ namespace WindowsFormsZZ
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
-            string selectedAuthor = textBox1.Text;
+            string selectedAuthor = SortTextbox.Text;
             var sortedBooks = library.Search(selectedAuthor);
-            dataGridView1.DataSource = sortedBooks;
+            DataGridViewBooks.DataSource = sortedBooks;
         }       
         private void button2_Click(object sender, EventArgs e)
         {
-            if (dataGridView2.SelectedRows.Count > 0)
+            if (DataGridViewTakeBooks.SelectedRows.Count > 0)
             {
-                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
-                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+                selectedWriteBook = (WriteBook)DataGridViewTakeBooks.SelectedRows[0].DataBoundItem;
+                selectedBook = (Book)DataGridViewBooks.SelectedRows[0].DataBoundItem;
             }
             if (selectedWriteBook == null)
             {
                 MessageBox.Show("Пожалуйста, выберите книгу из списка");
                 return;
             }        
-            string readerName = textBox2.Text;
+            string readerName = FullNameTextBox.Text;
             if (string.IsNullOrEmpty(readerName))
             {
                 MessageBox.Show("Пожалуйста, введите имя читателя.");
@@ -83,8 +83,8 @@ namespace WindowsFormsZZ
             if (dic.IssueBook(selectedWriteBook, readerName))
             {
                 selectedBook.Количество_доступных--; // Уменьшаем доступные
-                dataGridView1.Refresh();
-                dataGridView2.Refresh(); // Обновляем статус в dataGridView2
+                DataGridViewBooks.Refresh();
+                DataGridViewTakeBooks.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -93,9 +93,9 @@ namespace WindowsFormsZZ
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            if (dataGridView2.SelectedRows.Count > 0)
+            if (DataGridViewTakeBooks.SelectedRows.Count > 0)
             {
-                selectedWriteBook = (WriteBook)dataGridView2.SelectedRows[0].DataBoundItem;
+                selectedWriteBook = (WriteBook)DataGridViewTakeBooks.SelectedRows[0].DataBoundItem;
             }
             if (selectedWriteBook == null)
             {
@@ -129,8 +129,8 @@ namespace WindowsFormsZZ
             if (dic.ReturnBook(selectedWriteBook))
             {
                 selectedBook.Количество_доступных++; // Увеличиваем доступные
-                dataGridView1.Refresh();
-                dataGridView2.Refresh(); // Обновляем статус в dataGridView2
+                DataGridViewBooks.Refresh();
+                DataGridViewTakeBooks.Refresh(); // Обновляем статус в dataGridView2
             }
             else
             {
@@ -141,14 +141,14 @@ namespace WindowsFormsZZ
         {
             string selectedAuthor = "";
             var sortedBooks = library.Search(selectedAuthor);
-            dataGridView1.DataSource = sortedBooks;
-            textBox1.Clear();
+            DataGridViewBooks.DataSource = sortedBooks;
+            SortTextbox.Clear();
         }          
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
+            if (DataGridViewBooks.SelectedRows.Count > 0)
             {
-                selectedBook = (Book)dataGridView1.SelectedRows[0].DataBoundItem;
+                selectedBook = (Book)DataGridViewBooks.SelectedRows[0].DataBoundItem;
 
                 if (selectedBook != null)
                 {
@@ -174,8 +174,8 @@ namespace WindowsFormsZZ
                         }
                     }
                     BindingList<WriteBook> L = dic.GetWriteBookByKey(selectedBook.Имя);
-                    dataGridView2.DataSource = L; // Вывод словаря в dataGridView2
-                    dataGridView2.Refresh();
+                    DataGridViewTakeBooks.DataSource = L; // Вывод словаря в dataGridView2
+                    DataGridViewTakeBooks.Refresh();
                 }
                 else
                 {
