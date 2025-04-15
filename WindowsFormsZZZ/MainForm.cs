@@ -64,7 +64,6 @@ namespace WindowsFormsZZZ
             if (selectedBook == null || dataGridViewCopies.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Выберите книгу и конкретный экземпляр");
-                txtReader.Clear();
                 return;
             }
 
@@ -82,6 +81,7 @@ namespace WindowsFormsZZZ
                 MessageBox.Show("Книга успешно выдана");
                 dataGridViewBooks.Refresh();
                 dataGridViewCopies.Refresh();
+                txtReader.Clear();
             }
             else
             {
@@ -104,6 +104,7 @@ namespace WindowsFormsZZZ
                 MessageBox.Show("Книга успешно возвращена");
                 dataGridViewBooks.Refresh();
                 dataGridViewCopies.Refresh();
+                txtReader.Clear();
             }
             else
             {
