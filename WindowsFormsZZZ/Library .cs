@@ -18,12 +18,12 @@ namespace WindowsFormsZZZ
 
         public Dictionary<string, BindingList<WriteBook>> BookCopies = new Dictionary<string, BindingList<WriteBook>>();
 
-        public Library()
+        public Library() //конструктор 
         {
-            InitializeBookCopies();
+            InitializeBookCopies(); //Вызов метода InitializeBookCopies(), который создает экземпляры для каждой книги на основе количества доступных книг.
         }
 
-        private void InitializeBookCopies()
+        private void InitializeBookCopies() //Для каждой книги в Books создаёт определённое количество экземпляров WriteBook, основываясь на доступном количестве, и добавляет их в словарь BookCopies.
         {
             foreach (var book in Books)
             {
@@ -44,7 +44,7 @@ namespace WindowsFormsZZZ
             }
         }
 
-        public BindingList<Book> SearchByAuthor(string author)
+        public BindingList<Book> SearchByAuthor(string author) //Принимает имя автора и возвращает список книг, написанных данным автором, в виде BindingList<Book>
         {
             var result = Books.Where(b => b.Автор.Contains(author)).ToList();
             return new BindingList<Book>(result);
@@ -52,14 +52,14 @@ namespace WindowsFormsZZZ
 
         public bool IssueBook(string bookName, int copyId, string readerName)
         {
-            if (BookCopies.TryGetValue(bookName, out var copies))
+            if (BookCopies.TryGetValue(bookName, out var copies)) //Проверяет наличие доступного экземпляра по bookName.
             {
                 var copy = copies.FirstOrDefault(c => c.Id == copyId && !c.Факт_взятия);
-                if (copy != null)
+                if (copy != null) //Проверяет наличие доступного экземпляра по copyId.
                 {
                     copy.Факт_взятия = true;
                     copy.Читатель = readerName;
-                    copy.Дата_взятия = DateTime.Now;
+                    copy.Дата_взятия = DateTime.Now;                    //Если экземпляр доступен, обновляет его статус (выдано), назначает читателя, задаёт даты взятия и возврата.
                     copy.Дата_возврата = DateTime.Now.AddDays(14);
 
                     var book = Books.First(b => b.Имя == bookName);
@@ -72,14 +72,14 @@ namespace WindowsFormsZZZ
 
         public bool ReturnBook(string bookName, int copyId)
         {
-            if (BookCopies.TryGetValue(bookName, out var copies))
+            if (BookCopies.TryGetValue(bookName, out var copies))  //Проверяет наличие доступного экземпляра по bookName.
             {
                 var copy = copies.FirstOrDefault(c => c.Id == copyId && c.Факт_взятия);
-                if (copy != null)
+                if (copy != null)  //Проверяет статус экземпляра, чтобы убедиться, что книга была выдана.
                 {
                     copy.Факт_взятия = false;
                     copy.Читатель = null;
-                    copy.Дата_взятия = DateTime.MinValue;
+                    copy.Дата_взятия = DateTime.MinValue;                 //Если книга возвращается, обновляет статус экземпляра и увеличивает количество доступных книг.
                     copy.Дата_возврата = DateTime.MinValue;
 
                     var book = Books.First(b => b.Имя == bookName);

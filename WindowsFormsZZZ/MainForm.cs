@@ -14,14 +14,12 @@ namespace WindowsFormsZZZ
     {
         private Library library = new Library();
         private Book selectedBook;
-
         public MainForm()
         {
             InitializeComponent();
             dataGridViewBooks.DataSource = library.Books;
             dataGridViewBooks.SelectionChanged += DataGridViewBooks_SelectionChanged;
         }
-
         private void DataGridViewBooks_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridViewBooks.SelectedRows.Count > 0)
@@ -33,12 +31,6 @@ namespace WindowsFormsZZZ
                 }
             }
         }
-
-        /*private void btnSearch_Click(object sender, EventArgs e)
-        {
-            string author = txtAuthor.Text;
-            dataGridViewBooks.DataSource = library.SearchByAuthor(author);
-        }*/
         private void btnSearch_Click(object sender, EventArgs e)
         {
             string author = txtAuthor.Text.Trim(); // Удаляем лишние пробелы
@@ -88,7 +80,6 @@ namespace WindowsFormsZZZ
                 MessageBox.Show("Не удалось выдать книгу (возможно, она уже выдана)");
             }
         }
-
         private void btnReturn_Click(object sender, EventArgs e)
         {
             if (selectedBook == null || dataGridViewCopies.SelectedRows.Count == 0)
@@ -111,7 +102,6 @@ namespace WindowsFormsZZZ
                 MessageBox.Show("Не удалось вернуть книгу (возможно, она не была выдана)");
             }
         }
-
         private void btnReset_Click(object sender, EventArgs e)
         {
             txtAuthor.Clear();
@@ -119,3 +109,9 @@ namespace WindowsFormsZZZ
         }
     }
 }
+
+/*private void btnSearch_Click(object sender, EventArgs e)
+{
+    string author = txtAuthor.Text;
+    dataGridViewBooks.DataSource = library.SearchByAuthor(author);
+}*/
