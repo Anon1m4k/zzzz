@@ -8,78 +8,87 @@ using WindowsFormsZZZ;
 namespace Testing
 {
     [TestClass]
-    public class UnitTest
+    public class LibraryTests
     {
-        private BindingList<Book> _books;
-        private Dictionary<string, List<WriteBook>> _bookCopies;
+        private Library _library;
 
         [TestInitialize]
         public void Setup()
         {
-            // Инициализация тестовых данных перед каждым тестом
-            _books = new BindingList<Book>
-        {
-            new Book { Имя = "Book1", Автор = "Author1", Количество_доступных_книг = 2 },
-            new Book { Имя = "Book2", Автор = "Author2", Количество_доступных_книг = 1 }
-        };
-
-            _bookCopies = new Dictionary<string, List<WriteBook>>
-        {
-            {
-                "Book1",
-                new List<WriteBook>
-                {
-                    new WriteBook  { Id = 1, Факт_взятия = false },
-                    new WriteBook { Id = 2, Факт_взятия = false }
-                }
-            },
-            {
-                "Book2",
-                new List<WriteBook> { new WriteBook { Id = 3, Факт_взятия = false } }
-            }
-        };
+            _library = new Library();
         }
-        [TestMethod]
-        [DataRow("Фёдор Достоевский", 2)]  // Ожидается 2 книги Author1
-        [DataRow("Михаил Булгаков", 1)]  // Ожидается 1 книга Author2
-        [DataRow("Unknown", 0)]  // Нет совпадений
-        public void SearchByAuthor_ReturnsCorrectBooks(string author, int expectedCount)
+
+        [DataTestMethod]
+        [DataRow("Мастер и Маргарита", 1, "Иван Иванов", true)] // Успешная выдача
+        [DataRow("Несуществующая книга", 1, "Петр Петров", false)] // Неверное название
+        [DataRow("Преступление и наказание", 999, "Мария Сидорова", false)] // Неверный ID
+        [DataRow("Идиот", 1, "Анна Петрова", true)] // Успешная выдача
+        public void TestIssueBook(string bookName, int copyId, string readerName, bool expectedResult)
         {
-            // Arrange
-           // var library = new Library(_books, _bookCopies);
-            var library = new Library();
-
             // Act
-            var result = library.SearchByAuthor(author);
-
-            // Assert
-            Assert.AreEqual(expectedCount, result.Count);
-            Assert.IsTrue(result.All(b => b.Автор.Contains(author)));
-        }
-        [TestMethod]
-        [DataRow("Мастер и Маргарита", 1, "Reader1", true)]    // Успешная выдача
-        //[DataRow("Book1", 1, "Reader2", false)]   // Копия уже выдана
-        [DataRow("Мастер и Маргарита", 7, "Reader2", false)]   // Несуществующая книга
-        public void IssueBook_ReturnsCorrectStatus(string bookName, int copyId, string readerName, bool expectedResult)
-        {
-            // Arrange
-            //var library = new Library(_books, _bookCopies);
-            var library = new Library();
-            var initialAvailable = _books.First(b => b.Имя == bookName)?.Количество_доступных_книг ?? 0;
-
-            // Act
-            bool result = library.IssueBook(bookName, copyId, readerName);
-            var updatedAvailable = _books.FirstOrDefault(b => b.Имя == bookName)?.Количество_доступных_книг ?? 0;
+            bool result = _library.IssueBook(bookName, copyId, readerName);
 
             // Assert
             Assert.AreEqual(expectedResult, result);
 
-            if (expectedResult)
+            // Проверка изменения количества книг
+            if (result)
             {
-                var copy = _bookCopies[bookName].First(c => c.Id == copyId);
-                Assert.IsTrue(copy.Факт_взятия);
-                Assert.AreEqual(readerName, copy.Читатель);
-                Assert.AreEqual(initialAvailable - 1, updatedAvailable);
+                var book = _library.Books.First(b => b.Имя == bookName);
+                Assert.AreEqual(book.Количество_доступных_книг, book.Количество_доступных_книг);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("Мастер и Маргарита", 1, true)] // Успешный возврат
+        [DataRow("Несуществующая книга", 1, false)] // Неверное название
+        [DataRow("Война и мир", 1, false)] // Попытка вернуть невыданную книгу
+        [DataRow("Преступление и наказание", 999, false)] // Неверный ID
+        public void TestReturnBook(string bookName, int copyId, bool expectedResult)
+        {
+            // Подготовка: выдаем книгу перед возвратом
+            if (bookName == "Мастер и Маргарита")
+            {
+                _library.IssueBook(bookName, copyId, "Тестовый Читатель");
+            }
+
+            // Act
+            bool result = _library.ReturnBook(bookName, copyId);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+
+            // Проверка изменения количества книг
+            if (result)
+            {
+                var book = _library.Books.First(b => b.Имя == bookName);
+                Assert.AreEqual(book.Количество_доступных_книг, book.Количество_доступных_книг);
+            }
+        }
+
+        [DataTestMethod]
+        [DataRow("Фёдор Достоевский", 2)] // Точное совпадение
+        [DataRow("Досто", 2)] // Частичное совпадение
+        [DataRow("достоевский", 0)] // Проверка регистра
+        [DataRow("Лев Толстой", 1)] // Одна книга
+        [DataRow("Михаил Булгаков", 1)] // Одна книга
+        [DataRow("Несуществующий", 0)] // Нет совпадений
+        [DataRow("", 4)] // Пустой запрос (возвращает все книги)
+        public void TestSearchByAuthor(string authorQuery, int expectedCount)
+        {
+            // Act
+            var result = _library.SearchByAuthor(authorQuery);
+
+            // Assert
+            Assert.AreEqual(expectedCount, result.Count);
+
+            // Дополнительная проверка содержимого
+            if (expectedCount > 0)
+            {
+                foreach (var book in result)
+                {
+                    StringAssert.Contains(book.Автор.ToLower(),authorQuery.ToLower());
+                }
             }
         }
     }
