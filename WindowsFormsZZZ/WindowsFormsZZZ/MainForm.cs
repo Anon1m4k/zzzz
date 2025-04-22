@@ -25,9 +25,12 @@ namespace WindowsFormsZZZ
             if (dataGridViewBooks.SelectedRows.Count > 0)
             {
                 selectedBook = (Book)dataGridViewBooks.SelectedRows[0].DataBoundItem;
-                if (library.BookCopies.TryGetValue(selectedBook.Имя, out var copies))
+                if (selectedBook != null)
                 {
-                    dataGridViewCopies.DataSource = copies;
+                    if (library.BookCopies.TryGetValue(selectedBook.Имя, out var copies))
+                    {
+                        dataGridViewCopies.DataSource = copies;
+                    }
                 }
             }
         }
