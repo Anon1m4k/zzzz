@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace WindowsFormsZZZ
 {
@@ -10,7 +11,9 @@ namespace WindowsFormsZZZ
     {
         public string Имя { get; set; }
         public string Автор { get; set; }
+        [DisplayName("Год публикации")]
         public int Год_публикации { get; set; }
+        [DisplayName("Количество доступных книг")]
         public int Количество_доступных_книг { get; set; }
 
         public override bool Equals(object obj)
